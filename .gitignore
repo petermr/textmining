@@ -1,3 +1,6 @@
+# temp files output by tests
+temp/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

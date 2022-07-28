@@ -1,0 +1,7 @@
+
+TOKEN = secret
+https://api.lens.org/patent/search?token={TOKEN}&size=10&q=(title:(reverse%20transcriptase)%20OR%20abstract:(reverse%20transcriptase)%20OR%20claim:(reverse%20transcriptase))&include=biblio,description,lens_id&sort=desc(date_published)
+
+include=lens_id,title,description,claim
+https://www.lens.org/lens/search/patent/list?q=(title:(reverse%20transcriptase)%20OR%20abstract:(reverse%20transcriptase)%20OR%20claim:(reverse%20transcriptase))&p=0&n=10&s=_score&d=%2B&f=true&e=false&l=en&authorField=author&dateFilterField=publishedDate&orderBy=%2B_score&presentation=false&preview=true&sat=P&stemmed=true&useAuthorId=false&patentStatus.must=active&include=biblio,description,lens_id&sort=desc(date_published)
+
