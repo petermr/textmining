@@ -7,6 +7,7 @@ from patent.lens import Lens
 
 TEST_DIR = Path(__file__).parent
 RESOURCE_DIR = Path(TEST_DIR, "resources")
+TEMP_DIR = Path(Path(__file__).parent.parent, "temp")
 
 class TestLens(unittest.TestCase):
 

@@ -24,20 +24,24 @@ class Lens:
         for i, datax in enumerate(data):
             self.read_process_patent(datax, i)
 
-    def read_process_patent(self, datax, serial):
-        print(f"\n\n d {datax.keys()}")
-        biblio_ = datax['biblio']
+    def read_process_patent(self, patent_json, serial):
+        """read single patent from JSON aggregate from Lens
+        :param patent_json: JSON from Lens.org
+        :param serial: number within json
+        """
+        print(f"\n\n d {patent_json.keys()}")
+        biblio_ = patent_json['biblio']
         print(f"bib {biblio_.keys()} \n "
               f"APPLICATION REF: {biblio_['application_reference'] }\n"
               f"TITLE: {biblio_['invention_title'][0]['text']}")
               # ")
-        if "description" in datax:
-            text_ = datax['description']['text']
+        if "description" in patent_json:
+            text_ = patent_json['description']['text']
             print(f"text {len(text_)}: {text_[:70]} ...")
             outpath = Path(TEMP_DIR, f"desc_{serial + 1}.txt")
             with open(outpath, "w") as f:
                 f.write(text_)
-            aa1 = re.findall("\s([ACDEFGHIKLMNPQRSTVWY]\d{1,3}[ACDEFGHIKLMNPQRSTVWY])\s", text_)
+            aa1 = re.findall("\s([ACDEFGHIKLMNPQRSTVWY]\d{1,4}[ACDEFGHIKLMNPQRSTVWY])\s", text_)
             print(f"aa1: {aa1}")
             aa3 = re.findall("\s(Ala|Cys|Asp|Glu|Phe|Gly|His|Ile|Lys|Leu|Met|Asn|Pro|Gln|Arg|Ser|Thr|Val|Trp|Tyr)\s",
                              text_)
