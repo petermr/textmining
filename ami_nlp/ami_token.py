@@ -22,6 +22,9 @@ class AmiTokenizer:
                 self.text = f.read()
             self.tokenize_to_sentences_and_words()
 
+    def get_filtered_text(self):
+        return " ".join(self.words)
+
 
     SYMBOLS = ['±', '“']
     def tokenize_to_sentences_and_words(self):
@@ -35,4 +38,18 @@ class AmiTokenizer:
             self.words = [word for word in self.words if word not in self.SYMBOLS]
             for word in self.words:
                 self.counter[word] += 1
+
+    def extract_bigrams(self):
+        bigrams = list(nltk.bigrams(self.words))
+        bigram_freq = Counter()
+        for bigram in bigrams:
+            bigram_freq[bigram] += 1
+        return bigram_freq
+
+    def append(self, ami_tokenizer):
+        self.text = ami_tokenizer.text if self.text is None else self.text + ami_tokenizer.text
+        self.sentences.extend(ami_tokenizer.sentences)
+        self.words.extend(ami_tokenizer.words)
+        self.counter += ami_tokenizer.counter
+        self.stop_words |= ami_tokenizer.stop_words
 
