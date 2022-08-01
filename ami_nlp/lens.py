@@ -31,9 +31,10 @@ class Lens:
         :param patent_json: JSON from Lens.org
         :param serial: number within json
         """
-        print(f"\n\n d {patent_json.keys()}")
+        # print(f"\n\n d {patent_json.keys()}")
         biblio_ = patent_json['biblio']
-        print(f"bib {biblio_.keys()} \n "
+        print(f""
+              # f"bib {biblio_.keys()} \n "
               f"APPLICATION REF: {biblio_['application_reference'] }\n"
               f"TITLE: {biblio_['invention_title'][0]['text']}")
               # ")
