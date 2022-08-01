@@ -48,7 +48,8 @@ class TestLens(unittest.TestCase):
             corpus.append(filtered_text)
         vectorizer = TfidfVectorizer()
         X = vectorizer.fit_transform(corpus)
-        vectorizer.get_feature_names_out()
+        feature_names = vectorizer.get_feature_names_out()
+        print(f"feature names (words) {len(feature_names)}: {feature_names}")
 
         print(X.shape)
 
