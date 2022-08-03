@@ -30,16 +30,16 @@ class AmiTokenizer:
             self.tokenize_to_sentences_and_words()
             self.apply_filters()
 
-    def apply_filters(self, first_exit=True):
+    def apply_filters(self, max_hits_list=None):
         """iterates over several filters.
-        if first_exit exists as soon as gets a match from a filter
         """
         strings = self.words if self.words else self.sentences
+        hits_list = []
         for filter in self.custom_filters:
-            res = filter.search_in_list(strings)
-            if first_exit and res:
-                return res
-        return first_exit
+            hits = filter.search_in_list(strings)
+            if hits:
+                hits_list.append(hits)
+        return hits_list
 
     def get_filtered_text(self):
         return " ".join(self.words)

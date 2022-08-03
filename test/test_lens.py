@@ -16,13 +16,13 @@ TEMP_DIR = Path(Path(__file__).parent.parent, "temp")
 class TestLens(unittest.TestCase):
 
 
-    def test_read_lens(self):
+    def test_explore_lens(self):
         print(f"parent {TEST_DIR}")
 
         json_path = Path(RESOURCE_DIR, "p_1_100.json")
 
         lens = Lens()
-        lens.read_write(json_path)
+        lens.explore(json_path)
 
 
     def test_sklearn(self):

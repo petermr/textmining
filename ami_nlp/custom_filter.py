@@ -18,14 +18,18 @@ class CustomFilter:
     def regex(self):
         pass
 
-    def search_in_list(self, strings):
+    def search_in_list(self, strings, max_hits = None):
         """re.search() applied to list of strings. returns at first match
         :param strings: list of strings to search
-        :return: first match or None"""
+        :param max_hits: max hits before exit (None == infinite)
+        :return: list of hits"""
+        hits = []
         for string in strings:
             if res := self.search_string(string):
-                return res
-        return None
+                hits.append(res)
+                if max_hits and len(hits) > max_hits:
+                    break
+        return hits
 
 
     def search_string(self, string):
@@ -57,8 +61,7 @@ class Aa1Filter(CustomFilter):
     def regex(self):
         aa = "[ACDEFGHIKLMNPQRSTVWY]"
         count = self.make_count(self.min, self.max)
-        print(f"|{count}|")
-        reg = f"{aa}{count}"
+        reg = rf"{aa}{count}"
         return reg
 
 class Aa1MutFilter(CustomFilter):

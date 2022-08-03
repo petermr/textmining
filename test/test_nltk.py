@@ -9,8 +9,9 @@ from ami_nlp.ami_token import AmiTokenizer
 
 class TestAmiTokenizer:
 
-    def test_words_sentences_1(self):
-        """read a single (patent) text and extract sentences and (commonest) words"""
+    def test_words_sentences_single_doc_counter(self):
+        """read a single (patent) text and extract sentences and (commonest) words in Counter
+        """
         ami_tokenizer = AmiTokenizer()
         ami_tokenizer.read_text(Path(RESOURCE_DIR, "desc_1.txt"))
         with open(Path(RESOURCE_DIR, "desc_1.txt")) as f:
@@ -22,28 +23,38 @@ class TestAmiTokenizer:
                              " the entire content of which is incorporated by reference in this application." \
                              " TECHNICAL FIELD The present disclosure relates to the field of biotechnology," \
                              " in particular, to virus and tumor therapeutic drug for s"
-        print(f"sentences {len(ami_tokenizer.sentences)}, words {len(ami_tokenizer.words)}")
-        print(f"counter {ami_tokenizer.counter}")
-        print(f"common {ami_tokenizer.counter.most_common(50)}")
+        assert len(ami_tokenizer.sentences) == 268
+        assert len(ami_tokenizer.words) == 4880
+        assert ami_tokenizer.counter.most_common(5)  == [
+            ('cells', 140), ('virus', 139), ('protein', 113), ('tumor', 96), ('promoter', 83)]
 
-    @unittest.skip("too long")
-    def test_words_sentences_100(self):
-        """read 100 patents , find sentences, commonest words, bigrams
+    @unittest.skip("long")
+    def test_words_sentences_10(self):
+        """read 10 patents , find sentences, commonest words, bigrams
         (30 sec)
         """
         total_tokenizer = AmiTokenizer()
-        for i in range(1, 100):
+        ndocs = 10
+        for i in range(1, ndocs):
             ami_tokenizer = AmiTokenizer()
             ami_tokenizer.read_text(Path(TEMP_DIR, f"desc_{i}.txt"))
             ami_tokenizer.apply_filters()
             if ami_tokenizer.sentences:
                 total_tokenizer.append(ami_tokenizer)
-        assert len(total_tokenizer.sentences) == 104637
-        assert len(total_tokenizer.words) == 1740996
-        assert total_tokenizer.extract_bigrams().most_common(50)[:3] == [
-            (('SEQ', 'ID'), 8203),
-            (('nucleic', 'acid'), 7610),
-            (('amino', 'acid'), 3298)
+        assert len(total_tokenizer.sentences) == 10905
+        assert len(total_tokenizer.words) == 174165
+        assert total_tokenizer.extract_bigrams().most_common(10) == [
+            [(('nucleic', 'acid'), 1054),
+             (('least', 'least'), 903),
+             (('SEQ', 'ID'), 807),
+             (('prime', 'editing'), 506),
+             (('biological', 'component'), 493),
+             (('polymer', 'matrix'), 453),
+             (('amino', 'acid'), 434),
+             (('fluidic', 'device'), 359),
+             (('hours', 'hours'), 342),
+             (('μm', 'μm'), 340),
+            ]
         ]
 
     def test_words_sentences_3_patents(self):
@@ -73,8 +84,23 @@ class TestAmiTokenizer:
         """read single patent text and extract bigrams"""
         ami_tokenizer = AmiTokenizer()
         ami_tokenizer.read_text(Path(RESOURCE_DIR, "desc_1.txt"))
-        common50bigrams = ami_tokenizer.extract_bigrams().most_common(50)
-        assert common50bigrams[0:3] == [(('oncolytic', 'virus'), 51), (('tumor', 'cells'), 45), (('essential', 'gene'), 42)]
+        assert ami_tokenizer.extract_bigrams().most_common(15) == [
+            (('oncolytic', 'virus'), 51),
+            (('tumor', 'cells'), 45),
+            (('essential', 'gene'), 42),
+            (('present', 'disclosure'), 41),
+            (('recombinant', 'oncolytic'), 34),
+            (('oHSV-BJTT', 'oHSV-BJGMCSF'), 31),
+            (('reading', 'frame'), 24),
+            (('cells', 'infected'), 23),
+            (('oncolytic', 'viruses'), 22),
+            (('embodiments', 'present'), 20),
+            (('normal', 'cells'), 19),
+            (('late', 'gene'), 19),
+            (('essential', 'genes'), 17),
+            (('immunostimulatory', 'factor'), 16),
+            (('viral', 'late'), 16)
+        ]
 
     def test_scikit_tfidf(self):
         corpus = []
