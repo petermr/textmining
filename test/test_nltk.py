@@ -35,11 +35,16 @@ class TestAmiTokenizer:
         for i in range(1, 100):
             ami_tokenizer = AmiTokenizer()
             ami_tokenizer.read_text(Path(TEMP_DIR, f"desc_{i}.txt"))
+            ami_tokenizer.apply_filters()
             if ami_tokenizer.sentences:
                 total_tokenizer.append(ami_tokenizer)
         assert len(total_tokenizer.sentences) == 104637
         assert len(total_tokenizer.words) == 1740996
-        assert total_tokenizer.extract_bigrams().most_common(50)[:3] ==[(('SEQ', 'ID'), 8203), (('nucleic', 'acid'), 7610), (('amino', 'acid'), 3298)]
+        assert total_tokenizer.extract_bigrams().most_common(50)[:3] == [
+            (('SEQ', 'ID'), 8203),
+            (('nucleic', 'acid'), 7610),
+            (('amino', 'acid'), 3298)
+        ]
 
     def test_words_sentences_3_patents(self):
         """read 100 patents , find sentences, commonest words, bigrams

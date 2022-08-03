@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 # local
 from ami_nlp.ami_token import AmiTokenizer
+from ami_nlp.custom_filter import Aa1Filter
 
 TEST_DIR = Path(Path(__file__).parent.parent, "test")
 RESOURCES = Path(TEST_DIR, "resources")
@@ -15,6 +16,9 @@ class Lens:
         pass
 
     def read_write(self, json_path):
+        """exploratory; reads patent descrions and searches for aminoacid mutations
+        :param json_path: json for complete patent from TheLens
+        """
         print(f"json {json_path}")
         with open(str(json_path)) as f:
             p1 = json.load(f)
@@ -23,8 +27,12 @@ class Lens:
         data = p1["data"]
         print(f"ld {len(data)}")
         data0 = data[0]
+        filters = [
+            Aa1Filter()
+        ]
         for i, datax in enumerate(data):
             self.read_process_patent(datax, i)
+            self.apply_filters(filters)
 
     def read_process_patent(self, patent_json, serial):
         """read single ami_nlp from JSON aggregate from Lens
@@ -47,13 +55,11 @@ class Lens:
             ami_tokenizer = AmiTokenizer()
             ami_tokenizer.text = text_
             ami_tokenizer.tokenize_to_sentences_and_words()
-            for sent in ami_tokenizer.sentences:
-                # print(f"sent: {sent}")
-                aa1 = re.match("(.*)\s([ACDEFGHIKLMNPQRSTVWY]\d{1,4}[ACDEFGHIKLMNPQRSTVWY])\s(.*)", sent)
-                if aa1:
-                    print(f"+++++aa1: {aa1.group(1)} :: {aa1.group(2)} :: {aa1.group(3)}")
-                aa3 = re.findall("\s(Ala|Cys|Asp|Glu|Phe|Gly|His|Ile|Lys|Leu|Met|Asn|Pro|Gln|Arg|Ser|Thr|Val|Trp|Tyr)\s",
-                                 sent)
-                if aa3:
-                    print(f"***** aa3: {aa3}")
+
+    def apply_filters(self, filters=None):
+        if filters:
+            for filter in filters:
+                filter.apply_filters(self.words)
+        pass
+
 

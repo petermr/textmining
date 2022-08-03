@@ -26,6 +26,7 @@ class TestLens(unittest.TestCase):
 
 
     def test_sklearn(self):
+        """exploratory; runs sklearn on 100 patent desc_n.txts and extract clusters from words/sentences """
         from sklearn.feature_extraction.text import TfidfVectorizer
         corpus = [
             'This is the first document.',

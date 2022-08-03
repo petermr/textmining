@@ -7,20 +7,39 @@ import string
 
 """Tutorial https://realpython.com/nltk-nlp-python/ """
 class AmiTokenizer:
-    def __init__(self, use_stopwords=True, remove_punct=True):
+    def __init__(self, use_stopwords=True, remove_punct=True, custom_filter=None):
         self.text = None
         self.sentences = []
         self.words = []
         self.counter = Counter()
         self.stop_words = set() if not use_stopwords else set(stopwords.words("english"))
         self.remove_punct = remove_punct
+        self.custom_filters = []
+
+    def add_custom_filter(self, custom_filter):
+        if not custom_filter:
+            print(f"filter is None")
+            return
+        self.custom_filters.append(custom_filter)
 
 
-    def read_text(self, path):
+    def read_text(self, path, custom_filter=None):
         if path.exists():
             with open(path, "r") as f:
                 self.text = f.read()
             self.tokenize_to_sentences_and_words()
+            self.apply_filters()
+
+    def apply_filters(self, first_exit=True):
+        """iterates over several filters.
+        if first_exit exists as soon as gets a match from a filter
+        """
+        strings = self.words if self.words else self.sentences
+        for filter in self.custom_filters:
+            res = filter.search_in_list(strings)
+            if first_exit and res:
+                return res
+        return first_exit
 
     def get_filtered_text(self):
         return " ".join(self.words)

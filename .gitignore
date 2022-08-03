@@ -134,3 +134,9 @@ dmypy.json
 # IDEA
 .idea/
 
+# sklean tutorial
+text_analytics/data/languages/*
+text_analytics/data/movie_reviews/*
+text_analytics/data/twnty_newsgroups/*
+
+
